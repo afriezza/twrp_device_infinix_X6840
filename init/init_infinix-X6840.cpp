@@ -25,12 +25,10 @@ void vendor_load_properties()
     for (const string &prop : prop_partitions)
     {
         property_override(string("ro.product.") + prop + string("brand"), "Infinix");
-        property_override(string("ro.product.") + prop + string("name"), "X6532");
-        property_override(string("ro.product.") + prop + string("device"), "Infinix-X6532");
-        property_override(string("ro.product.") + prop + string("model"), "Infinix X6532");
-        property_override(string("ro.product.") + prop + string("marketname"), "Infinix Smart 9");
-        property_override(string("ro.product.system.") + prop + string("device"), "Infinix Smart 9");
+        property_override(string("ro.product.") + prop + string("name"), "X6840");
+        property_override(string("ro.product.") + prop + string("device"), "Infinix-X6840");
+        property_override(string("ro.product.") + prop + string("model"), "Infinix X6840");
+        property_override(string("ro.product.") + prop + string("marketname"), "Infinix Smart 20");
+        property_override(string("ro.product.system.") + prop + string("device"), "Infinix Smart 20");
     }
-    property_override("ro.bootimage.build.date.utc", "1609430400");
-    property_override("ro.build.date.utc", "1609430400");
 }
