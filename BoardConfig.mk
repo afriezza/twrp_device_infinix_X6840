@@ -77,6 +77,10 @@ TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
 TW_USE_FSCRYPT_POLICY := 2
 TW_FORCE_KEYMASTER_VER := true
+# Fix boot hang - skip auto-decrypt at boot
+TW_NO_LEGACY_PROPS := true
+TW_CRYPTO_USE_FSCRYPT := true
+TW_CRYPTO_SYSTEM_VOLD_DECRYPT := false
 
 # Partitions configs
 BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
@@ -136,7 +140,7 @@ BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 # Vendor Modules
 
-TW_LOAD_VENDOR_MODULES := $(shell echo \"$(shell ls $(DEVICE_PATH)/recovery/root/lib/modules) $(shell ls $(DEVICE_PATH)/recovery/root/vendor/lib/modules)\")
+TW_LOAD_VENDOR_MODULES := $(shell ls $(DEVICE_PATH)/recovery/root/lib/modules)
 
 # Hack
 PLATFORM_SECURITY_PATCH := 2099-12-31
