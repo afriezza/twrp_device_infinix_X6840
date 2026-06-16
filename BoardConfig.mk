@@ -140,7 +140,7 @@ BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 # Vendor Modules
 
-TW_LOAD_VENDOR_MODULES := $(shell ls $(DEVICE_PATH)/recovery/root/lib/modules)
+TW_LOAD_VENDOR_MODULES := "$(shell ls $(DEVICE_PATH)/recovery/root/lib/modules)"
 
 # Hack
 PLATFORM_SECURITY_PATCH := 2099-12-31
