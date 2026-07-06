@@ -1,0 +1,60 @@
+name: Build TWRP Infinix X6840
+
+on:
+  workflow_dispatch: # Biar muncul tombol "Run workflow" manual
+
+jobs:
+  build_twrp:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Clean Up Server Space
+      run: |
+        sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android
+        docker image prune -a -f
+        
+    - name: Install Build Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gperf gcc-multilib g++-multilib lib32ncurses5-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip bc bison build-essential curl git gnupg libelf-dev libssl-dev python3
+
+    - name: Install Repo Tool
+      run: |
+        mkdir -p ~/bin
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        sudo ln -sf ~/bin/repo /usr/bin/repo
+
+    - name: Sync TWRP Source Code
+      run: |
+        mkdir twrp
+        cd twrp
+        git config --global user.name "Builder"
+        git config --global user.email "builder@email.com"
+        # Menggunakan manifest resmi TWRP untuk Android 12.1
+        repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+    - name: Clone Device Tree
+      run: |
+        cd twrp
+        # Mengambil source dari github XTENSEI khusus branch twrp-12.1
+        git clone https://github.com/XTENSEI/twrp_device_infinix_X6840.git -b twrp-12.1 device/infinix/X6840
+
+    - name: Compile TWRP Image
+      run: |
+        cd twrp
+        export ALLOW_MISSING_DEPENDENCIES=true
+        source build/envsetup.sh
+        lunch twrp_X6840-eng || lunch twrp_X6840-userdebug
+        make clean
+        mka recoveryimage -j$(nproc --all)
+
+    - name: Upload Finished TWRP
+      uses: actions/upload-artifact@v4
+      with:
+        name: TWRP-Infinix-X6840-Image
+        path: twrp/out/target/product/X6840/recovery.img
+        
